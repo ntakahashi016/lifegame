@@ -8,6 +8,13 @@ Window {
     width: 640
     height: 480
     title: qsTr("LifeGame")
+    signal runButtonSignal(string msg)
+    signal stopButtonSignal(string msg)
+    function qmlSlot(text)
+    {
+        console.log("qmlSlot is called with the text: " + text)
+    }
+
     RowLayout {
         anchors.top: parent.top
         anchors.topMargin: 10
@@ -52,7 +59,7 @@ Window {
                                 _bg.color = deadCell
                             } else {
                                 _bg.alive = true
-                                _bg.color = aliveCell1
+                                _bg.color = aliveCell
                             }
                         }
                         states: [
@@ -64,7 +71,6 @@ Window {
                                     color: pressedCell
                                 }
                             }
-
                         ]
                     }
                 }
@@ -76,6 +82,7 @@ Window {
                 text: "うごかす"
                 onClicked: {
                     console.log(_RunButton.text + "clicked")
+                    runButtonSignal("run button clicked")
                 }
             }
             Button {
@@ -83,6 +90,7 @@ Window {
                 text: "とめる"
                 onClicked: {
                     console.log(_StopButton.text + "clicked")
+                    stopButtonSignal("stop button clicked")
                 }
             }
         }
