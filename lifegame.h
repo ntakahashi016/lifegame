@@ -5,23 +5,26 @@
 #include <QVariant>
 #include <iostream>
 #include <thread>
+#include "cell.h"
 
 class LifeGame : public QObject
 {
     Q_OBJECT
+    Cell* cells;
+    int culmn;
+
+    void run(int val);
 
 public:
     explicit LifeGame(QObject *parent = 0);
+    ~LifeGame();
 
 signals:
-    void cppSignal(QVariant text);
+    void setArray(QVariant array);
 
 public slots:
-    void runButtonSlot(QString msg);
+    void runButtonSlot(QVariant array);
     void stopButtonSlot(QString msg);
-
-private:
-    void run();
 };
 
 #endif // LIFEGAME_H

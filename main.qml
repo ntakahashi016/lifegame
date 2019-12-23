@@ -8,11 +8,20 @@ Window {
     width: 640
     height: 480
     title: qsTr("LifeGame")
-    signal runButtonSignal(string msg)
+    signal runButtonSignal(variant array)
     signal stopButtonSignal(string msg)
-    function qmlSlot(text)
+    function getCellArray() {
+        var cellarray = new Array
+        for (var i=0; i<_CellAreas.count; i++) {
+            cellarray.push(_CellAreas.itemAt(i).alive);
+        }
+        return cellarray;
+    }
+    function setCellArraySlot(array)
     {
-        console.log("qmlSlot is called with the text: " + text)
+        for (var i=0; i<array.length; i++) {
+            _CellAreas.itemAt(i).alive = array[i];
+        }
     }
 
     RowLayout {
@@ -25,6 +34,7 @@ Window {
             columnSpacing: -1
             rowSpacing: -1
             Repeater {
+                id: _CellAreas
                 model: 2500
                 Rectangle {
                     id: _bg
@@ -39,39 +49,30 @@ Window {
                     color: deadCell
                     border.color: cellBorder
                     border.width: 1
+                    states: [
+                        State {
+                            name: "Alive"
+                            when: alive
+                            PropertyChanges {
+                                target: _bg
+                                color: aliveCell
+                            }
+                        },
+                        State {
+                            name: "Dead"
+                            when: !alive
+                            PropertyChanges {
+                                target: _bg
+                                color: deadCell
+                            }
+                        }
+
+                    ]
                     MouseArea {
                         id: _ma
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: {
-                            _bg.color = selectedCell
-                        }
-                        onExited: {
-                            if (_bg.alive === true) {
-                                _bg.color = aliveCell
-                            } else {
-                                _bg.color = deadCell
-                            }
-                        }
-                        onClicked: {
-                            if (_bg.alive === true) {
-                                _bg.alive = false
-                                _bg.color = deadCell
-                            } else {
-                                _bg.alive = true
-                                _bg.color = aliveCell
-                            }
-                        }
-                        states: [
-                            State {
-                                name: "pressed"
-                                when: _ma.pressed
-                                PropertyChanges {
-                                    target: _bg
-                                    color: pressedCell
-                                }
-                            }
-                        ]
+                        onClicked: { _bg.alive = !_bg.alive }
                     }
                 }
             }
@@ -81,15 +82,13 @@ Window {
                 id: _RunButton
                 text: "うごかす"
                 onClicked: {
-                    console.log(_RunButton.text + "clicked")
-                    runButtonSignal("run button clicked")
+                    runButtonSignal(getCellArray())
                 }
             }
             Button {
                 id: _StopButton
                 text: "とめる"
                 onClicked: {
-                    console.log(_StopButton.text + "clicked")
                     stopButtonSignal("stop button clicked")
                 }
             }

@@ -5,6 +5,7 @@
 
 int main(int argc, char *argv[])
 {
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
@@ -22,14 +23,14 @@ int main(int argc, char *argv[])
 
     QObject *root = engine.rootObjects().first();
 
-    QObject::connect(root, SIGNAL(runButtonSignal(QString)),
-                     &obj, SLOT(runButtonSlot(QString)));
+    QObject::connect(root, SIGNAL(runButtonSignal(QVariant)),
+                     &obj, SLOT(runButtonSlot(QVariant)));
 
     QObject::connect(root, SIGNAL(stopButtonSignal(QString)),
                      &obj, SLOT(stopButtonSlot(QString)));
 
-    QObject::connect(&obj, SIGNAL(cppSignal(QVariant)),
-                     root, SLOT(qmlSlot(QVariant)));
+    QObject::connect(&obj, SIGNAL(setArray(QVariant)),
+                     root, SLOT(setCellArraySlot(QVariant)));
 
     return app.exec();
 }
