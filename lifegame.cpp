@@ -9,6 +9,9 @@ LifeGame::LifeGame(QObject *parent) : QObject(parent)
 {
     culmn = 50;
     cells = new Cell[culmn*culmn];
+    QObject::connect(&runThread, SIGNAL(data_update()),
+                     this, SLOT(run()));
+    // 近傍のセルを追加する
     for (int i = 0; i < culmn*culmn; i++)
     {
         // 一番上の行を除く
@@ -47,6 +50,8 @@ LifeGame::LifeGame(QObject *parent) : QObject(parent)
 }
 LifeGame::~LifeGame()
 {
+    runThread.quit();
+    runThread.wait();
     delete[] cells;
 }
 
@@ -58,28 +63,28 @@ void LifeGame::runButtonSlot(QVariant array)
     for (int i = 0; i < list.size(); i++) {
         cells[i].setAlive(list[i].toBool());
     }
-    LifeGame::run(1);
-    for (int i = 0; i < culmn*culmn; i++) {
-        list[i] = cells[i].getAlive();
-    }
-    emit setArray(list);
+    runThread.start();
 }
 
 void LifeGame::stopButtonSlot(QString msg)
 {
-    qDebug() << "stopButtonSlot is called with the message: " << msg;
+    runThread.quit();
+    runThread.wait();
 }
 
-void LifeGame::run(int age)
+void LifeGame::run()
 {
+    QVariantList list;
     Cell* nextGeneration;
     nextGeneration = new Cell[culmn*culmn];
-    for (int i = 0; i < age; i++) {
-        for (int j = 0; j < culmn*culmn; j++) {
-            nextGeneration[j].setAlive(cells[j].getNextGeneration());
-        }
+    for (int j = 0; j < culmn*culmn; j++) {
+        nextGeneration[j].setAlive(cells[j].getNextGeneration());
     }
     for (int i = 0; i < culmn*culmn; i++) {
         cells[i].setAlive(nextGeneration[i].getAlive());
     }
+    for (int i = 0; i < culmn*culmn; i++) {
+        list << cells[i].getAlive();
+    }
+    emit setArray(list);
 }

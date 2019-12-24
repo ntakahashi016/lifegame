@@ -6,14 +6,15 @@
 #include <iostream>
 #include <thread>
 #include "cell.h"
+#include "runthread.h"
 
 class LifeGame : public QObject
 {
     Q_OBJECT
     Cell* cells;
     int culmn;
+    RunThread runThread;
 
-    void run(int val);
 
 public:
     explicit LifeGame(QObject *parent = 0);
@@ -25,6 +26,7 @@ signals:
 public slots:
     void runButtonSlot(QVariant array);
     void stopButtonSlot(QString msg);
+    void run();
 };
 
 #endif // LIFEGAME_H

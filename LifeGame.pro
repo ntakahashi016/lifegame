@@ -16,7 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         cell.cpp \
         lifegame.cpp \
-        main.cpp
+        main.cpp \
+        runthread.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,4 +34,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     cell.h \
-    lifegame.h
+    lifegame.h \
+    runthread.h
