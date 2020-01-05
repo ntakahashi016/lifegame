@@ -14,36 +14,88 @@ LifeGame::LifeGame(QObject *parent) : QObject(parent)
     // 近傍のセルを追加する
     for (int i = 0; i < culmn*culmn; i++)
     {
-        // 一番上の行を除く
         if (i >= culmn) {
-            // 左端を除く
+            // 一番上の行以外
             if (i % culmn != 0) {
+                // 左端以外
                 cells[i].addNeighborhood(&cells[i-culmn-1]);
+            } else {
+                // 左端
+                cells[i].addNeighborhood(&cells[i-1]);
             }
             cells[i].addNeighborhood(&cells[i-culmn]);
-            //右端を除く
             if (i % culmn != culmn - 1) {
+                // 右端以外
                 cells[i].addNeighborhood(&cells[i-culmn+1]);
+            } else {
+                // 右端
+                cells[i].addNeighborhood(&cells[i-culmn-culmn+1]);
+            }
+        } else {
+            // 一番上の行
+            if (i % culmn != 0) {
+                // 左端以外
+                cells[i].addNeighborhood(&cells[i-culmn-1+culmn*culmn]);
+            } else {
+                // 左端
+                cells[i].addNeighborhood(&cells[culmn*culmn-1]);
+            }
+            cells[i].addNeighborhood(&cells[i-culmn+culmn*culmn]);
+            if (i % culmn != culmn -1) {
+                // 右端以外
+                cells[i].addNeighborhood(&cells[i-culmn+1+culmn*culmn]);
+            } else {
+                // 右端
+                cells[i].addNeighborhood(&cells[culmn*culmn-culmn]);
             }
         }
         // 左端を除く
         if (i % culmn != 0) {
             cells[i].addNeighborhood(&cells[i-1]);
+        } else {
+            // 左端
+            cells[i].addNeighborhood(&cells[i+culmn-1]);
         }
         // 右端を除く
         if (i % culmn != culmn - 1) {
             cells[i].addNeighborhood(&cells[i+1]);
+        } else {
+            // 右端
+            cells[i].addNeighborhood(&cells[i-culmn+1]);
         }
-        // 一番下の行を除く
         if (i < culmn * culmn - culmn) {
-            // 左端を除く
+            // 一番下の行以外
             if (i % culmn != 0) {
+                // 左端以外
                 cells[i].addNeighborhood(&cells[i+culmn-1]);
+            } else {
+                // 左端
+                cells[i].addNeighborhood(&cells[i+culmn+culmn-1]);
             }
             cells[i].addNeighborhood(&cells[i+culmn]);
-            // 右端を除く
             if (i % culmn != culmn - 1) {
+                // 右端以外
                 cells[i].addNeighborhood(&cells[i+culmn+1]);
+            } else {
+                // 右端
+                cells[i].addNeighborhood(&cells[i+1]);
+            }
+        } else {
+            // 一番下の行
+            if (i % culmn != 0) {
+                // 左端以外
+                cells[i].addNeighborhood(&cells[i%culmn-1]);
+            } else {
+                // 左端
+                cells[i].addNeighborhood(&cells[culmn*culmn-i-1]);
+            }
+            cells[i].addNeighborhood(&cells[i+culmn-culmn*culmn]);
+            if (i % culmn != culmn - 1) {
+                // 右端以外
+                cells[i].addNeighborhood(&cells[i%culmn+1]);
+            } else {
+                // 右端
+                cells[i].addNeighborhood(&cells[0]);
             }
         }
     }
